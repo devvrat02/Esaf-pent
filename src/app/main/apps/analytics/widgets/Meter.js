@@ -8,7 +8,7 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import RadialSeparators from "./RadialSeparators";
 import ProgressProvider from "./ProgressProvider";
-import { easeQuadInOut } from "d3-ease";
+
 
 
 
