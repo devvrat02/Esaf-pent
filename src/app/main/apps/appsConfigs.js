@@ -9,6 +9,7 @@ import CloudAppConfig from "./cloud/CloudAppConfig";
 import KnowledgeBaseConfig from "./knowledgebase/KnowledgeBaseConfig";
 import CompConfig from "./Comp/CompConfig";
 import SettingConfig from "./setting/SettingConfig";
+import BugRepoConfig from "./BugRepo/BugRepoConfig"
 
 const appsConfigs = [
   AnalyticsAppConfig,
@@ -21,7 +22,8 @@ const appsConfigs = [
   CompConfig,
   ChatAppConfig,
   VulConfig,
-  SettingConfig
+  SettingConfig,
+  BugRepoConfig
 ];
 
 export default appsConfigs;

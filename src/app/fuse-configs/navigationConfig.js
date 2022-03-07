@@ -7,22 +7,8 @@ const navigationConfig = [
     type: 'group',
     icon: 'apps',
     children: [
-      {
-        id: 'Organization',
-        title: 'Organization',
-        translate: 'Pentester\nTeam',
-        type: 'item',
-        icon: 'business',
-        url: 'apps/organization',
-      },
-      {
-        id: 'analytics',
-        title: 'Analytics',
-        translate: 'Analytics',
-        type: 'item',
-        icon: 'analytics',
-        url: 'apps/analytics',
-      },
+
+
       {
         id: 'vulnerabilities',
         title: 'Vulnerabilities',
@@ -32,28 +18,12 @@ const navigationConfig = [
         url: 'apps/vulnerabilities',
       },
       {
-        id: 'cloud',
-        title: 'Cloud',
-        translate: 'Cloud',
+        id: 'BugReport',
+        title: 'BugReport',
+        translate: 'BugReport',
         type: 'item',
-        icon: 'cloud',
-        url: 'apps/cloud',
-      },
-      // {
-      //   id: 'Comp',
-      //   title: 'Compliance',
-      //   translate: 'Compliance',
-      //   type: 'item',
-      //   icon: 'article',
-      //   url: 'apps/comp',
-      // },
-      {
-        id: 'TeamMembers',
-        title: 'TeamMembers',
-        translate: 'Team\nMembers',
-        type: 'item',
-        icon: 'people',
-        url: 'apps/teams',
+        icon: 'bug_report',
+        url: 'apps/BugRepo',
       },
       {
         id: 'calendar',

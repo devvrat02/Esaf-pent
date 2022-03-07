@@ -1,6 +1,6 @@
 import _ from '@lodash';
 import clsx from 'clsx';
-
+import "./co.css";
 export const Riskstate = [
   {
     id: 1,
@@ -25,7 +25,7 @@ export const Riskstate = [
   {
     id: 5,
     name: 'CRITICAL',
-    color: 'bg-brown text-white',
+    color: 'bg-marron text-white',
   },
 ];
 

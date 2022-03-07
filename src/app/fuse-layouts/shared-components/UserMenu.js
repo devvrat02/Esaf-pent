@@ -80,12 +80,12 @@ function UserMenu(props) {
               </ListItemIcon>
               <ListItemText primary="Register" />
             </MenuItem>
-            <MenuItem component={Link} to="/apps/setting" onClick={userMenuClose} role="button">
+            {/* <MenuItem component={Link} to="/apps/setting" onClick={userMenuClose} role="button">
               <ListItemIcon className="min-w-40">
                 <Icon>settings</Icon>
               </ListItemIcon>
               <ListItemText primary="Settings" />
-            </MenuItem>
+            </MenuItem> */}
           </>
         ) : (
           <>
@@ -101,12 +101,12 @@ function UserMenu(props) {
               </ListItemIcon>
               <ListItemText primary="Message" />
             </MenuItem>
-            <MenuItem component={Link} to="/apps/setting" onClick={userMenuClose} role="button">
+            {/* <MenuItem component={Link} to="/apps/setting" onClick={userMenuClose} role="button">
               <ListItemIcon className="min-w-40">
                 <Icon >settings</Icon>
               </ListItemIcon>
               <ListItemText primary="Inbox" />
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem
               onClick={() => {
                 dispatch(logoutUser());
