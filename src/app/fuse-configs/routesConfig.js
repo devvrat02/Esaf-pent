@@ -31,7 +31,7 @@ const routes = [
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, null),
   {
     path: '/',
-    element: <Navigate to="apps/organization" />,
+    element: <Navigate to="apps/vulnerabilities" />,
   },
   {
     path: 'loading',
