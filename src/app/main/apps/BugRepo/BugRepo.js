@@ -18,15 +18,46 @@ import * as React from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Icon from '@mui/material/Icon';
-import { FormControl, InputLabel, OutlinedInput, InputAdornment } from '@mui/material';
+import { FormControl, OutlinedInput, InputAdornment, Switch, Button } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow, TableContainer, TableHead, } from '@mui/material';
 import Cwe from './Cwe';
 import Asset from './Asset';
 import { List, ListItem, Divider, ListItemText } from '@mui/material'
 import { FormControlLabel, FormGroup } from '@mui/material';
 import { Stack } from '@mui/material';
-import CvssV3 from 'cvss-v3.1-react';
+import Cvss from 'cvss-calculator';
+import WYSIWYGEditor from 'app/shared-components/WYSIWYGEditor';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import MiniBadge from './MiniBadge';
+
+
+import { yupResolver } from '@hookform/resolvers/yup';
+
 function BugRepo() {
+    const schema = yup.object().shape({
+        to: yup.string().required('You must enter Full Details').email('You must enter Full Details'),
+    });
+    const { watch, handleSubmit, formState, control } = useForm({
+        mode: 'onChange',
+        defaultValues: {
+            Asset: '',
+            Title: '',
+            Weekness: '',
+            severity: '',
+            Description: '',
+            Impact: '',
+            Remedy: '',
+        },
+        resolver: yupResolver(schema),
+    });
+
+    const { isValid, dirtyFields, errors } = formState;
+    function onSubmit(data) {
+        console.info(data);
+
+    }
+
     const [values, setValues] = React.useState({
         assets: '',
         title: '',
@@ -41,19 +72,23 @@ function BugRepo() {
         severity: ''
     });
     const [cvsScore, setScore] = React.useState({
-        AV: '',
-        AC: '',
-        PR: '',
-        UI: '',
-        S: '',
-        C: '',
-        I: '',
-        A: ''
-    });
+        AV: 'N',
+        AC: 'L',
+        PR: 'N',
+        UI: 'N',
+        S: 'U',
+        C: 'N',
+        I: 'N',
+        A: 'N'
+    }
+    );
+
     const handleCVSS = (props) => (event, val) => {
-        setScore({
-            ...cvsScore, [props]: val
-        })
+        if (val !== null) {
+            setScore({
+                ...cvsScore, [props]: val
+            })
+        }
     }
 
     const handleSV = (props) => (event) => {
@@ -73,10 +108,11 @@ function BugRepo() {
     };
 
     const handleChangeS = (event, val) => {
-        setSeverity(val);
-
+        if (val !== null) {
+            setSeverity(val);
+        }
     };
-
+    const Sevcolor = { Critical: "#cc2600", High: "#df3d03", Medium: "#f9a008", Low: "#ffcb0b", None: "#53aa33" };
 
 
     const FilterAsset = Asset.filter((values.assets == "") ? row => true : row => row.plat.toLowerCase().includes(values.assets.toLowerCase) == true);
@@ -89,7 +125,9 @@ function BugRepo() {
         show: { opacity: 1, y: 0 },
     };
 
-    const severityVector = "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:L";
+    const Str = "CVSS:3.1/AV:" + cvsScore.AV + "/AC:" + cvsScore.AC + "/PR:" + cvsScore.PR + "/UI:" + cvsScore.UI + "/S:" + cvsScore.S + "/C:" + cvsScore.C + "/I:" + cvsScore.I + "/A:" + cvsScore.A;
+    const cvss = new Cvss(Str);
+
     return (<>
         <motion.div variants={item} className="widget w-full p-16 pb-48">
             <>
@@ -238,195 +276,200 @@ function BugRepo() {
             </>
 
 
+            <>
+                <Card className="w-full" varient="outlined" square >
+                    <CardHeader
+                        avatar={
+                            <Avatar sx={{ bgcolor: red[500] }} sizes='small'>
+                                3
+                            </Avatar>
+                        }
 
-            <Card className="w-full" varient="outlined" square >
-                <CardHeader
-                    avatar={
-                        <Avatar sx={{ bgcolor: red[500] }} sizes='small'>
-                            3
-                        </Avatar>
-                    }
+                        title="Severity(optional)"
+                        subheader="Estimate the severity of this issue."
+                    />
+                    <CardContent>
+                        <Box sx={{ padding: "1%" }} >
 
-                    title="Severity(optional)"
-                    subheader="Estimate the severity of this issue."
-                />
-                <CardContent>
-                    <Box sx={{ padding: "1%" }} >
+                            <div className="relative p-20 flex flex-row items-center justify-between border">
+                                <div className="flex flex-col">
+                                    <ToggleButtonGroup
+                                        color="primary"
+                                        value={severity}
+                                        exclusive
+                                        size="small"
+                                        onChange={handleChangeS}
+                                    >
+                                        <ToggleButton value="Critical">Critical</ToggleButton>
+                                        <ToggleButton value="High">High</ToggleButton>
+                                        <ToggleButton value="Medium">Medium</ToggleButton>
+                                        <ToggleButton value="Low">Low</ToggleButton>
+                                        <ToggleButton value="Info">Info</ToggleButton>
+                                    </ToggleButtonGroup>
+                                </div>
 
-                        <div className="relative p-20 flex flex-row items-center justify-between border">
-                            <div className="flex flex-col">
-                                <ToggleButtonGroup
-                                    color="primary"
-                                    value={severity}
-                                    exclusive
-                                    size="small"
-                                    onChange={handleChangeS}
+                                <div className="flex flex-row items-center">
+                                    {(severity === '') ? <></> : <MiniBadge name={severity} />}
+                                </div>
+
+                            </div>
+                        </Box>
+                        <Divider>OR</Divider>
+
+                        <Box className='border relative p-18' sx={{ margin: "1%", marginTop: "1%", marginBottom: "1%", padding: "2%" }} >
+                            <div className='relative  flex flex-row items-center justify-between'><Typography className='text-20 '>CVSS v3.0 Calculator</Typography>        <Avatar sx={{ bgcolor: Sevcolor[cvss.getRating()] }} sizes='small'>
+                                {cvss.getBaseScore()}
+                            </Avatar></div>
+                            <Stack direction={{ xs: 'column', sm: 'row' }}
+                                spacing="10%"
+                            >
+
+                                <Stack
+                                    direction='column'
+                                    spacing={1}
                                 >
-                                    <ToggleButton value="Critical">Critical</ToggleButton>
-                                    <ToggleButton value="High">High</ToggleButton>
-                                    <ToggleButton value="Medium">Medium</ToggleButton>
-                                    <ToggleButton value="Low">Low</ToggleButton>
-                                    <ToggleButton value="Info">Info</ToggleButton>
-                                </ToggleButtonGroup>
-                            </div></div>
-                    </Box>
-                    <Divider>OR</Divider>
-
-                    <Box className='border relative p-18' sx={{ margin: "1%", marginTop: "1%", marginBottom: "1%", padding: "2%" }} >
-                        <Typography className='text-20'>CVSS v3.0 Calculator</Typography>
-                        <Stack direction={{ xs: 'column', sm: 'row' }}
-                            spacing="10%"
-
-                        >
-
-                            <Stack
-                                direction='column'
-                                spacing={1}
-                            >
-                                <FormGroup >
-                                    <Typography>Attack Vector</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.AV}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('AV')}
-                                    >
-                                        <ToggleButton value="N">Network</ToggleButton>
-                                        <ToggleButton value="A">Adjacent</ToggleButton>
-                                        <ToggleButton value="L">Local</ToggleButton>
-                                        <ToggleButton value="P">Physical</ToggleButton>
-                                    </ToggleButtonGroup>
-                                </FormGroup>
+                                    <FormGroup >
+                                        <Typography>Attack Vector</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.AV}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('AV')}
+                                        >
+                                            <ToggleButton value="N" >Network</ToggleButton>
+                                            <ToggleButton value="A" >Adjacent</ToggleButton>
+                                            <ToggleButton value="L" >Local</ToggleButton>
+                                            <ToggleButton value="P" >Physical</ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
 
 
-                                <FormGroup >
-                                    <Typography>Attack Complexity</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.AC}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('AC')}
-                                    >
-                                        <ToggleButton value="L">Low</ToggleButton>
-                                        <ToggleButton value="H">High</ToggleButton>
-                                    </ToggleButtonGroup>
-                                </FormGroup>
+                                    <FormGroup >
+                                        <Typography>Attack Complexity</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.AC}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('AC')}
+                                        >
+                                            <ToggleButton value="L" >Low</ToggleButton>
+                                            <ToggleButton value="H" >High</ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
 
 
-                                <FormGroup sx={{ marginBottom: "3%", marginTop: "1%" }}>
-                                    <Typography>Privileges Required</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.PR}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('PR')}
-                                    >
-                                        <ToggleButton value="N">None</ToggleButton>
-                                        <ToggleButton value="L">Low</ToggleButton>
-                                        <ToggleButton value="H">High</ToggleButton>
-                                    </ToggleButtonGroup>
-                                </FormGroup>
+                                    <FormGroup sx={{ marginBottom: "3%", marginTop: "1%" }}>
+                                        <Typography>Privileges Required</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.PR}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('PR')}
+                                        >
+                                            <ToggleButton value="N" >None</ToggleButton>
+                                            <ToggleButton value="L" >Low</ToggleButton>
+                                            <ToggleButton value="H" >High</ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
 
 
-                                <FormGroup >
-                                    <Typography>User Interaction</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.UI}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('UI')}
-                                    >
-                                        <ToggleButton value="N">None</ToggleButton>
-                                        <ToggleButton value="R">Required</ToggleButton>
-                                    </ToggleButtonGroup>
-                                </FormGroup>
-                            </Stack>
+                                    <FormGroup >
+                                        <Typography>User Interaction</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.UI}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('UI')}
+                                        >
+                                            <ToggleButton value="N" >None</ToggleButton>
+                                            <ToggleButton value="R" >Required</ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
+                                </Stack>
 
-                            <Stack
-                                direction="column"
-                                spacing={1}
+                                <Stack
+                                    direction="column"
+                                    spacing={1}
 
-                            >
-                                <FormGroup >
-                                    <Typography>Scope</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.S}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('S')}
-                                    >
-                                        <ToggleButton value="U">Unchanged</ToggleButton>
-                                        <ToggleButton value="C">Changed</ToggleButton>
-                                    </ToggleButtonGroup>
-                                </FormGroup>
-                                <FormGroup >
-                                    <Typography>Confidentiality</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.C}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('C')}
-                                    >
-                                        <ToggleButton value="N">None</ToggleButton>
-                                        <ToggleButton value="L">Low</ToggleButton>
-                                        <ToggleButton value="H">High</ToggleButton>
+                                >
+                                    <FormGroup >
+                                        <Typography>Scope</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.S}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('S')}
+                                        >
+                                            <ToggleButton value="U" >Unchanged</ToggleButton>
+                                            <ToggleButton value="C" >Changed</ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
+                                    <FormGroup >
+                                        <Typography>Confidentiality</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.C}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('C')}
+                                        >
+                                            <ToggleButton value="N" >None</ToggleButton>
+                                            <ToggleButton value="L" >Low</ToggleButton>
+                                            <ToggleButton value="H" >High</ToggleButton>
 
-                                    </ToggleButtonGroup>
-                                </FormGroup>
-                                <FormGroup >
-                                    <Typography>Integrity</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.I}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('I')}
-                                    >
-                                        <ToggleButton value="N">None</ToggleButton>
-                                        <ToggleButton value="L">Low</ToggleButton>
-                                        <ToggleButton value="H">High</ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
+                                    <FormGroup >
+                                        <Typography>Integrity</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.I}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('I')}
+                                        >
+                                            <ToggleButton value="N" >None</ToggleButton>
+                                            <ToggleButton value="L" >Low</ToggleButton>
+                                            <ToggleButton value="H" >High</ToggleButton>
 
-                                    </ToggleButtonGroup>
-                                </FormGroup>
-                                <FormGroup >
-                                    <Typography>Availability</Typography>
-                                    <ToggleButtonGroup
-                                        color="primary"
-                                        value={cvsScore.A}
-                                        exclusive
-                                        size="small"
-                                        onChange={handleCVSS('A')}
-                                    >
-                                        <ToggleButton value="N">None</ToggleButton>
-                                        <ToggleButton value="L">Low</ToggleButton>
-                                        <ToggleButton value="H">High</ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
+                                    <FormGroup >
+                                        <Typography>Availability</Typography>
+                                        <ToggleButtonGroup
+                                            color="primary"
+                                            value={cvsScore.A}
+                                            exclusive
+                                            size="small"
+                                            onChange={handleCVSS('A')}
+                                        >
+                                            <ToggleButton value="N" >None</ToggleButton>
+                                            <ToggleButton value="L" >Low</ToggleButton>
+                                            <ToggleButton value="H" >High</ToggleButton>
 
-                                    </ToggleButtonGroup>
-                                </FormGroup>
+                                        </ToggleButtonGroup>
+                                    </FormGroup>
+
+                                </Stack>
 
                             </Stack>
+                            <Box sx={{ background: "#71717120", marginTop: "1.5%", padding: "1%" }} >
+                                <Typography sx={{ fontSize: "18px" }}>Currently Severity: {cvss.getBaseScore()} <br />
+                                </Typography>
+                                <span className='font-medium' sx={{ fontSize: "10px" }}>{Str}</span>
+                            </Box>
 
-                        </Stack>
-                        <Box sx={{ background: "#71717120", marginTop: "1.5%", padding: "1%" }} >
-                            <Typography sx={{ fontSize: "18px" }}>Currently selected: {(selectedValues.weekness == "") ? <>None</> :
-                                <span onClick={handleSVR('weekness')} sx={{ color: blue }}>(Selected)</span>}<br />
-                            </Typography>
-                            <span className='font-medium' sx={{ fontSize: "10px" }}>{selectedValues.weekness}</span>
                         </Box>
 
-                    </Box>
+                    </CardContent>
 
-                </CardContent>
-                <CvssV3 severityVector={severityVector} onChange={(data) => {
-                    console.log('data-----------', data);
-                }} />
-            </Card>
+                </Card>
+            </>
             <br />
 
 
@@ -447,28 +490,54 @@ function BugRepo() {
                         subheader="The proof of concept is the most important part of your report submission. Clear, reproducible steps will help us validate this issue as quickly as possible."
                     />
                     <CardContent>
-                        < Typography className="h4 sm:h2 font-medium" sx={{ marginLeft: "2%", marginTop: "4%", marginBottom: "%" }}>Title   </Typography>
-                        <div className="flex flex-row items-center">
-                            <TextField fullWidth required sx={{ marginLeft: "2%", marginRight: "2%" }} />
+                        < Typography className="h4 sm:h2 font-medium" sx={{ marginBottom: "%" }}>Title   </Typography>
+                        <div className="flex flex-row items-center">     <TextField fullWidth required />
+
                         </div>
 
-                        < Typography className="h4 sm:h2 font-medium" sx={{ marginLeft: "2%", marginTop: "4%", marginBottom: "%" }}>Description</Typography>
+                        < Typography className="h4 sm:h2 font-medium" sx={{ marginTop: "2%", marginBottom: "%" }}>Description</Typography>
                         <div className="flex flex-row items-center">
-                            <TextField fullWidth required sx={{ marginLeft: "2%", marginRight: "2%" }} />
+                            <Controller
+                                className="mt-8 mb-16"
+                                render={({ field }) => <WYSIWYGEditor {...field} />}
+                                name="Description"
+                                control={control}
+                            />
+
                         </div>
 
-                        < Typography className="h4 sm:h2 font-medium" sx={{ marginLeft: "2%", marginTop: "4%", marginBottom: "%" }}>Impact</Typography>
+                        < Typography className="h4 sm:h2 font-medium" sx={{ marginTop: "2%", marginBottom: "%" }}>Impact</Typography>
                         <div className="flex flex-row items-center">
-                            <TextField fullWidth required sx={{ marginLeft: "2%", marginRight: "2%" }} />
+                            <Controller
+                                className="mt-8 mb-16"
+                                render={({ field }) => <WYSIWYGEditor {...field} />}
+                                name="Impact"
+                                control={control}
+                            />
                         </div>
 
-                        < Typography className="h4 sm:h2 font-medium items-center" sx={{ marginLeft: "2%", marginTop: "4%", marginBottom: "%" }}>Remediation</Typography>
-                        <div className="flex flex-row items-center">
-                            <TextField fullWidth required sx={{ marginLeft: "2%", marginRight: "2%" }} />
+                        < Typography className="h4 sm:h2 font-medium items-center" sx={{ marginTop: "2%", marginBottom: "%" }}>Remediation</Typography>
+                        <div className="flex flex-row items-center"  >
+                            <Controller
+                                className="mt-8 mb-16"
+                                render={({ field }) => <WYSIWYGEditor {...field} />}
+                                name="Remediation"
+                                control={control}
+                            />
                         </div>
 
                     </CardContent>
 
+
+                    <div className="relative p-20 flex flex-row items-center justify-between">
+                        <div className="flex flex-col">
+
+                        </div>
+
+                        <div className="flex flex-row items-center">
+                            <Button variant="contained" sx={{ borderRadius: "4px" }}>Submit Report</Button>
+                        </div>
+                    </div>
                 </Card>
                 <br />
 
@@ -483,6 +552,15 @@ function BugRepo() {
 
 
             <br />
+
+
+
+
+            <>
+
+            </>
+
+
 
         </motion.div>
 
