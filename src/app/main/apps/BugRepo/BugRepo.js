@@ -30,7 +30,7 @@ import WYSIWYGEditor from 'app/shared-components/WYSIWYGEditor';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import MiniBadge from './MiniBadge';
-
+import { Alert, AlertTitle } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -54,7 +54,7 @@ function BugRepo() {
 
     const { isValid, dirtyFields, errors } = formState;
     function onSubmit(data) {
-        console.info(data);
+        // console.info(data);
 
     }
 
@@ -209,23 +209,28 @@ function BugRepo() {
 
 
                         </FormControl>
-                        <TableContainer component={Paper} sx={{ maxHeight: 100 }} square>
+                        <TableContainer component={Paper} sx={{ maxHeight: 150 }} square>
                             <Table stickyHeader><TableBody>
 
                                 {FilterAsset.map((row) => (
-                                    <TableRow key={row['id']} onClick={handleSV('assets')} >
-                                        <TableCell sx={{ marginLeft: "4%" }}>{row['asset'] + "          " + row['plat']}</TableCell>
-                                    </TableRow>
+                                    ((selectedValues.assets === row['asset'] + " " + row['plat'])) ?
+                                        <TableRow key={row['id']} onClick={handleSV('assets')} >
+                                            <TableCell sx={{ marginLeft: "4%", bgcolor: "#7eb2dd20" }}>{row['asset'] + " " + row['plat']}  </TableCell></TableRow>
+                                        :
+                                        <TableRow key={row['id']} onClick={handleSV('assets')} >
+                                            <TableCell sx={{ marginLeft: "4%" }}>{row['asset'] + " " + row['plat']}  </TableCell>
+                                        </TableRow>
                                 ))}
 
                             </TableBody></Table>
                         </TableContainer>
+                        <Box sx={{ background: "#71717120", marginTop: "1.5%", padding: "1%" }} >
+                            <Typography sx={{ fontSize: "12px" }}>Currently selected: {(selectedValues.assets == "") ? <>None</> : <span onClick={handleSVR('assets')} sx={{ color: "#023442" }}>(Selected)</span>}<br /> </Typography>
+                            {(selectedValues.assets != "") ? <Alert severity="success" onClose={handleSVR('assets')} square>
+                                {selectedValues.assets}
+                            </Alert> : <></>}
+                        </Box>
                     </CardContent>
-                    <Box sx={{ background: "#71717120", margin: "1.5%", padding: "1%" }} >
-                        <Typography sx={{ fontSize: "18px" }}>Currently selected: {(selectedValues.assets == "") ? <>None</> : <span onClick={handleSVR('assets')} sx={{ color: "#023442" }}>(Selected)</span>}<br /> </Typography>
-                        <span className='font-medium' sx={{ fontSize: "10px" }}>{selectedValues.assets}</span>
-
-                    </Box>
 
                 </Card>
                 <br />
@@ -257,17 +262,26 @@ function BugRepo() {
                         </FormControl>
                         <TableContainer component={Paper} sx={{ maxHeight: 200 }} square>
                             <Table stickyHeader><TableBody>
-                                {FilterCwe.map((row) => (<TableRow key={row['CWE-ID']} onClick={handleSV('weekness')}>
-                                    <TableCell sx={{ marginLeft: "4%" }}>{"CWE-" + row['CWE-ID'] + " : " + row['Name']}
-                                    </TableCell>
-                                </TableRow>))}</TableBody>
+                                {FilterCwe.map((row) => (
+                                    ((selectedValues.weekness === "CWE-" + row['CWE-ID'] + " : " + row['Name'])) ?
+                                        <TableRow key={row['CWE-ID']} onClick={handleSV('weekness')}>
+                                            <TableCell sx={{ marginLeft: "4%", bgcolor: "#7eb2dd20" }}>{"CWE-" + row['CWE-ID'] + " : " + row['Name']}
+                                            </TableCell>
+                                        </TableRow>
+                                        :
+                                        <TableRow key={row['CWE-ID']} onClick={handleSV('weekness')}>
+                                            <TableCell sx={{ marginLeft: "4%" }}>{"CWE-" + row['CWE-ID'] + " : " + row['Name']}
+                                            </TableCell>
+                                        </TableRow>))}</TableBody>
                             </Table>
                         </TableContainer>
                         <Box sx={{ background: "#71717120", marginTop: "1.5%", padding: "1%" }} >
-                            <Typography sx={{ fontSize: "18px" }}>Currently selected: {(selectedValues.weekness == "") ? <>None</> :
-                                <span onClick={handleSVR('weekness')} sx={{ color: blue }}>(Selected)</span>}<br />
+                            <Typography sx={{ fontSize: "12px" }}>Currently selected: {(selectedValues.weekness == "") ? <>None</> :
+                                <span onClick={handleSVR('weekness')} sx={{ color: 'text.secondary' }}>(Selected)</span>}<br />
                             </Typography>
-                            <span className='font-medium' sx={{ fontSize: "10px" }}>{selectedValues.weekness}</span>
+                            {(selectedValues.weekness != "") ? <Alert severity="success" onClose={handleSVR('weekness')} square>
+                                {selectedValues.weekness}
+                            </Alert> : <></>}
                         </Box>
                     </CardContent>
                 </Card>
@@ -461,7 +475,10 @@ function BugRepo() {
                             <Box sx={{ background: "#71717120", marginTop: "1.5%", padding: "1%" }} >
                                 <Typography sx={{ fontSize: "18px" }}>Currently Severity: {cvss.getBaseScore()} <br />
                                 </Typography>
-                                <span className='font-medium' sx={{ fontSize: "10px" }}>{Str}</span>
+                                {(selectedValues.assets != "") ? <Alert severity="success" onClose={handleSVR('assets')} square>
+                                    {Str}
+                                </Alert> : <></>}
+
                             </Box>
 
                         </Box>
@@ -535,7 +552,7 @@ function BugRepo() {
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <Button variant="contained" sx={{ borderRadius: "4px" }}>Submit Report</Button>
+                            <Button variant="contained" sx={{ borderRadius: "4px", color: "#FFFFFF" }}>Submit Report</Button>
                         </div>
                     </div>
                 </Card>

@@ -7,22 +7,49 @@ const navigationConfig = [
     type: 'group',
     icon: 'apps',
     children: [
-
-
       {
         id: 'vulnerabilities',
         title: 'Vulnerabilities',
         translate: 'Vulnerabilities',
-        type: 'item',
+        type: 'collapse',
         icon: 'bug_report',
         url: 'apps/vulnerabilities',
+        children: [
+
+          {
+            id: 'WEB',
+            title: 'WEB',
+            translate: 'WEB',
+            type: 'item',
+            icon: 'language',
+            url: 'apps/vulnerabilities',
+          },
+          {
+            id: 'IOS',
+            title: 'IOS',
+            translate: 'IOS',
+            type: 'item',
+            icon: 'tablet_mac ',
+            url: 'apps/vulnerabilitiesIOS',
+          },
+          {
+            id: 'Android',
+            title: 'Android',
+            translate: 'Android',
+            type: 'item',
+            icon: 'android',
+            url: 'apps/vulnerabilitiesAND',
+
+          },
+
+        ],
       },
       {
         id: 'BugReport',
         title: 'BugReport',
         translate: 'BugReport',
         type: 'item',
-        icon: 'bug_report',
+        icon: 'article',
         url: 'apps/BugRepo',
       },
       {

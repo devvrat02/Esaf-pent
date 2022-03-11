@@ -5,32 +5,32 @@ export const Riskstate = [
     {
         id: 10,
         name: '',
-        color: '',
+        color: 'bg',
     },
     {
         id: 11,
         name: 'Low',
-        color: 'bg-green text-white',
+        color: 'bg-yellow',
     },
     {
         id: 12,
         name: 'Medium',
-        color: 'bg-orange text-black',
+        color: 'bg-orange',
     },
     {
         id: 13,
         name: 'High',
-        color: 'bg-red text-white',
+        color: 'bg-red',
     },
     {
         id: 14,
         name: 'Critical',
-        color: 'bg-marron text-white',
+        color: 'bg-marron',
     },
     {
         id: 14,
         name: 'Info',
-        color: 'bg-blue text-white',
+        color: 'bg-green',
     },
 ];
 function MiniBadge(props) {
@@ -38,14 +38,14 @@ function MiniBadge(props) {
         return <></>;
     }
     else {
-        return (<><div
+        return (<>{props.name + " "}<div sx={{ marginLeft: "1%" }}
             className={clsx(
-                'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
+                'inline text-12 ml-10 font-semibold py-4 px-12 rounded-full truncate',
                 _.find(Riskstate, { name: props.name }).color
             )}
         >
 
-        </div>    {"  " + props.name}</>);
+        </div>    </>);
 
     }
 }
