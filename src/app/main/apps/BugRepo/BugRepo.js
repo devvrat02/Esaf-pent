@@ -475,9 +475,9 @@ function BugRepo() {
                             <Box sx={{ background: "#71717120", marginTop: "1.5%", padding: "1%" }} >
                                 <Typography sx={{ fontSize: "18px" }}>Currently Severity: {cvss.getBaseScore()} <br />
                                 </Typography>
-                                {(selectedValues.assets != "") ? <Alert severity="success" onClose={handleSVR('assets')} square>
+                                <Alert severity="success" square>
                                     {Str}
-                                </Alert> : <></>}
+                                </Alert>
 
                             </Box>
 
