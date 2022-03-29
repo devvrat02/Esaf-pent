@@ -31,7 +31,7 @@ class FirebaseService {
     }
     return new Promise((resolve, reject) => {
       this.db
-        .ref(`users/${userId}`)
+        .ref(`pent-users/${userId}`)
         .once('value')
         .then((snapshot) => {
           const user = snapshot.val();
@@ -44,11 +44,12 @@ class FirebaseService {
     if (!firebase.apps.length) {
       return false;
     }
-    return this.db.ref(`users/${user.uid}`).set(user);
+    return this.db.ref(`pent-users/${user.uid}`).set(user);
   };
 
   onAuthStateChanged = (callback) => {
-    if (!this.auth) {
+    if (!this.auth && !(this.db
+      .ref(`pent-users/${userId}`).exists())) {
       return;
     }
     this.auth.onAuthStateChanged(callback);
