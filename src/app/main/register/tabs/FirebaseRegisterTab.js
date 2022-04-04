@@ -28,6 +28,11 @@ const defaultValues = {
   email: '',
   password: '',
   passwordConfirm: '',
+  avatar: "assets/images/avatars/james.jpg",
+  experience: "",
+  charge: "900 K",
+  certificate: "CEH , OSCP",
+  status: "Add"
 };
 
 function FirebaseRegisterTab(props) {
@@ -111,6 +116,82 @@ function FirebaseRegisterTab(props) {
             />
           )}
         />
+        <Controller
+          name="Experience"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-16"
+              type="text"
+              label="Experience"
+              error={!!errors.displayName}
+              helperText={errors?.displayName?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Icon className="text-20" color="action">
+                      person
+                    </Icon>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+              required
+            />
+          )}
+        />
+        <Controller
+          name="Charge"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-16"
+              type="text"
+              label="Charge"
+              error={!!errors.displayName}
+              helperText={errors?.displayName?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Icon className="text-20" color="action">
+                      person
+                    </Icon>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+              required
+            />
+          )}
+        />
+        <Controller
+          name="Certificate"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-16"
+              type="text"
+              label="Certificate"
+              error={!!errors.displayName}
+              helperText={errors?.displayName?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Icon className="text-20" color="action">
+                      person
+                    </Icon>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+              required
+            />
+          )}
+        />
+
 
         <Controller
           name="password"
