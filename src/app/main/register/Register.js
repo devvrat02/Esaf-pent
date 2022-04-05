@@ -7,9 +7,9 @@ import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Auth0RegisterTab from './tabs/Auth0RegisterTab';
+
 import FirebaseRegisterTab from './tabs/FirebaseRegisterTab';
-import JWTRegisterTab from './tabs/JWTRegisterTab';
+
 
 const Root = styled('div')(({ theme }) => ({
   background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${darken(

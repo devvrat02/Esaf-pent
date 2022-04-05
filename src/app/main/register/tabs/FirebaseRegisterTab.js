@@ -21,6 +21,10 @@ const schema = yup.object().shape({
     .required('Please enter your password.')
     .min(8, 'Password is too short - should be 8 chars minimum.'),
   passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  experience: yup.string().required('You must enter display name'),
+  charge: yup.string().required('You must enter display name'),
+  certificate: yup.string().required('You must enter display name'),
+
 });
 
 const defaultValues = {
@@ -32,7 +36,6 @@ const defaultValues = {
   experience: "",
   charge: "900 K",
   certificate: "CEH , OSCP",
-  status: "Add"
 };
 
 function FirebaseRegisterTab(props) {
@@ -117,7 +120,7 @@ function FirebaseRegisterTab(props) {
           )}
         />
         <Controller
-          name="Experience"
+          name="experience"
           control={control}
           render={({ field }) => (
             <TextField
@@ -125,8 +128,8 @@ function FirebaseRegisterTab(props) {
               className="mb-16"
               type="text"
               label="Experience"
-              error={!!errors.displayName}
-              helperText={errors?.displayName?.message}
+              error={!!errors.experience}
+              helperText={errors?.experience?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -142,7 +145,7 @@ function FirebaseRegisterTab(props) {
           )}
         />
         <Controller
-          name="Charge"
+          name="charge"
           control={control}
           render={({ field }) => (
             <TextField
@@ -150,8 +153,8 @@ function FirebaseRegisterTab(props) {
               className="mb-16"
               type="text"
               label="Charge"
-              error={!!errors.displayName}
-              helperText={errors?.displayName?.message}
+              error={!!errors.charge}
+              helperText={errors?.charge?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -167,7 +170,7 @@ function FirebaseRegisterTab(props) {
           )}
         />
         <Controller
-          name="Certificate"
+          name="certificate"
           control={control}
           render={({ field }) => (
             <TextField
@@ -175,8 +178,8 @@ function FirebaseRegisterTab(props) {
               className="mb-16"
               type="text"
               label="Certificate"
-              error={!!errors.displayName}
-              helperText={errors?.displayName?.message}
+              error={!!errors.certificate}
+              helperText={errors?.certificate?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

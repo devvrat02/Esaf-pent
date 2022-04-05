@@ -44,12 +44,13 @@ class FirebaseService {
     if (!firebase.apps.length) {
       return false;
     }
+    // this.db.ref('PentList/Org/').set(user.org)
     return this.db.ref(`users/pent/${user.uid}`).set(user);
+
   };
 
   onAuthStateChanged = (callback) => {
-    if (!this.auth && !(this.db
-      .ref(`pent-users/${userId}`).exists())) {
+    if (!this.auth && !(this.db.ref(`users/pent/${userId}`).exists())) {
       return;
     }
     this.auth.onAuthStateChanged(callback);

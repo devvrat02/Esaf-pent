@@ -45,7 +45,7 @@ export const setUserDataFirebase = (user, authUser) => async (dispatch) => {
     // Set user data but do not update
     return dispatch(setUserData(user));
   }
-
+  // dispatch(setOrg(user))
   // Create missing user settings
   return dispatch(createUserSettingsFirebase(authUser));
 };
@@ -54,7 +54,17 @@ export const createUserSettingsFirebase = (authUser) => async (dispatch, getStat
   const guestUser = getState().auth.user;
   const fuseDefaultSettings = getState().fuse.settings.defaults;
   const { currentUser } = firebase.auth();
-
+  const org = [{
+    id: authUser.uid,
+    avatar: "assets/images/avatars/james.jpg",
+    name: authUser.displayName,
+    "experience": "1 Years",
+    "charge": "300 K",
+    "certificate": "CISCO NETWORK",
+    "status": "Occupied"
+  }
+  ];
+  console.log(getState);
   /**
    * Merge with current Settings
    */

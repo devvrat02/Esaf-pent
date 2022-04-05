@@ -6,21 +6,21 @@ import { createUserSettingsFirebase, setUserData } from './userSlice';
 
 export const submitRegister =
   ({ displayName, password, email }) =>
-  async (dispatch) => {
-    return jwtService
-      .createUser({
-        displayName,
-        password,
-        email,
-      })
-      .then((user) => {
-        dispatch(setUserData(user));
-        return dispatch(registerSuccess());
-      })
-      .catch((errors) => {
-        return dispatch(registerError(errors));
-      });
-  };
+    async (dispatch) => {
+      return jwtService
+        .createUser({
+          displayName,
+          password,
+          email,
+        })
+        .then((user) => {
+          dispatch(setUserData(user));
+          return dispatch(registerSuccess());
+        })
+        .catch((errors) => {
+          return dispatch(registerError(errors));
+        });
+    };
 
 export const registerWithFirebase = (model) => async (dispatch) => {
   if (!firebaseService.auth) {
@@ -28,8 +28,8 @@ export const registerWithFirebase = (model) => async (dispatch) => {
 
     return () => false;
   }
-  const { email, password, displayName } = model;
-
+  const { email, password, displayName, experience, charge, certificate } = model;
+  console.log(experience, charge, certificate);
   return firebaseService.auth
     .createUserWithEmailAndPassword(email, password)
     .then((response) => {
@@ -38,6 +38,9 @@ export const registerWithFirebase = (model) => async (dispatch) => {
           ...response.user,
           displayName,
           email,
+          experience,
+          charge,
+          certificate
         })
       );
 
