@@ -21,6 +21,10 @@ const schema = yup.object().shape({
     .required('Please enter your password.')
     .min(8, 'Password is too short - should be 8 chars minimum.'),
   passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  experience: yup.string().required('You must enter display name'),
+  charge: yup.string().required('You must enter display name'),
+  certificate: yup.string().required('You must enter display name'),
+
 });
 
 const defaultValues = {
@@ -28,6 +32,10 @@ const defaultValues = {
   email: '',
   password: '',
   passwordConfirm: '',
+  avatar: "assets/images/avatars/james.jpg",
+  experience: "",
+  charge: "900 K",
+  certificate: "CEH , OSCP",
 };
 
 function FirebaseRegisterTab(props) {
@@ -111,6 +119,82 @@ function FirebaseRegisterTab(props) {
             />
           )}
         />
+        <Controller
+          name="experience"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-16"
+              type="text"
+              label="Experience"
+              error={!!errors.experience}
+              helperText={errors?.experience?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Icon className="text-20" color="action">
+                      person
+                    </Icon>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+              required
+            />
+          )}
+        />
+        <Controller
+          name="charge"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-16"
+              type="text"
+              label="Charge"
+              error={!!errors.charge}
+              helperText={errors?.charge?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Icon className="text-20" color="action">
+                      person
+                    </Icon>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+              required
+            />
+          )}
+        />
+        <Controller
+          name="certificate"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-16"
+              type="text"
+              label="Certificate"
+              error={!!errors.certificate}
+              helperText={errors?.certificate?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Icon className="text-20" color="action">
+                      person
+                    </Icon>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+              required
+            />
+          )}
+        />
+
 
         <Controller
           name="password"
