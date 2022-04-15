@@ -50,6 +50,42 @@ export const setUserDataFirebase = (user, authUser) => async (dispatch) => {
   return dispatch(createUserSettingsFirebase(authUser));
 };
 
+export const createUserSettingsPentFirebase = (authUser) => async (dispatch, getState) => {
+  const guestUser = getState().auth.user;
+  const fuseDefaultSettings = getState().fuse.settings.defaults;
+  const { currentUser } = firebase.auth();
+  const org = [{
+    id: authUser.uid,
+    avatar: "assets/images/avatars/james.jpg",
+    name: authUser.displayName,
+    "experience": "1 Years",
+    "charge": "300 K",
+    "certificate": "CISCO NETWORK",
+    "status": "Occupied"
+  }
+  ];
+  console.log(getState);
+  /**
+   * Merge with current Settings
+   */
+  const user = _.merge({}, guestUser, {
+    uid: authUser.uid,
+    from: 'firebase',
+    role: ['admin'],
+    data: {
+      displayName: authUser.displayName,
+      email: authUser.email,
+      settings: { ...fuseDefaultSettings },
+    },
+  });
+  currentUser.updateProfile(user.data);
+
+  dispatch(updateUserData(user));
+
+  return dispatch(setUserData(user));
+};
+
+
 export const createUserSettingsFirebase = (authUser) => async (dispatch, getState) => {
   const guestUser = getState().auth.user;
   const fuseDefaultSettings = getState().fuse.settings.defaults;
