@@ -134,7 +134,7 @@ function AssetsTable(props) {
                           <em>None</em>
                         </MenuItem>
                         {risks.map((option) => (
-                          <MenuItem key={option.value} value={option.value} onClick={handleChange, handleClose} >
+                          <MenuItem key={option.value} value={option.value} onClick={()=>{handleChange(); handleClose();}} >
                             {option.label}
                           </MenuItem>
                         ))}
